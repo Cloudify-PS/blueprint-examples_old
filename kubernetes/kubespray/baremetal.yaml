@@ -45,7 +45,7 @@ node_types:
     properties:  &k8s-cluster-prop
       agent_config:
         default:
-          install_method: remote
+          install_method: none
           user: { get_input: agent_user }
           port: 22
           key: { get_input: agent_key_private }
