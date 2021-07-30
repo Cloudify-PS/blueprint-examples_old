@@ -3,7 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_3
 imports:
   - https://cloudify.co/spec/cloudify/5.1.0/types.yaml
   - plugin:cloudify-ansible-plugin?version= >=2.10.0
-  - plugin:cloudify-utilities-plugin
+  - plugin:cloudify-utilities-plugin?version= >=1.25.0
   - includes/application.yaml
   - includes/kube-config.yaml
 
@@ -15,10 +15,18 @@ inputs:
       The ip address used for the master.
     default: { get_secret: k8s_master_ip }
 
-  node_ip:
+  nodes_list:
     description: >
-      The ip address used for the node. This blueprint supports one node
-    default: { get_secret: k8s_node_ip }
+      IP addresses used for the nodes.
+    default:
+      - 172.16.167.156
+      - 172.16.167.157
+      - 172.16.167.158
+
+  nodes_count:
+    description: >
+      Number of IP adresses to pop from nodes_list.
+    default: 3
 
   agent_key_private:
     description: >
@@ -30,12 +38,11 @@ inputs:
       The username of the agent running on the instance created from the image.
     default: 'centos'
 
-
 node_types:
 
-  k8s-cluster: &k8s-cluster
+  k8s-cluster:
     derived_from: cloudify.nodes.Compute
-    properties:
+    properties:  &k8s-cluster-prop
       agent_config:
         default:
           install_method: remote
@@ -43,12 +50,32 @@ node_types:
           port: 22
           key: { get_input: agent_key_private }
 
+  kube-master:
+    derived_from: cloudify.nodes.Compute
+    properties: *k8s-cluster-prop
 
-  kube-master: *k8s-cluster
-
-  kube-node: *k8s-cluster
+  kube-node:
+    derived_from: cloudify.nodes.Compute
+    properties: *k8s-cluster-prop
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create: resources.cloudify_resources.tasks.create_list_item
+        start:
+          implementation: scripts/assign_ip.py
+          executor: central_deployment_agent
+        delete: resources.cloudify_resources.tasks.delete_list_item
 
 node_templates:
+
+  resources:
+    type: cloudify.nodes.resources.List
+    properties:
+      resource_config: { get_input: nodes_list }
+    capabilities:
+      scalable:
+        properties:
+          min_instances: 1
+          max_instances: 1
 
   kube-master:
     type: kube-master
@@ -57,9 +84,9 @@ node_templates:
 
   kube-node:
     type: kube-node
-    properties:
-      ip: { get_input: node_ip }
-
+    relationships:
+      - type: cloudify.relationships.resources.reserve_list_item
+        target: resources
 
 groups:
 
@@ -82,5 +109,5 @@ policies:
   kube-node-policy:
     type: cloudify.policies.scaling
     properties:
-      default_instances: 1
+      default_instances: { get_input: nodes_count }
     targets: [kube-node-group]
