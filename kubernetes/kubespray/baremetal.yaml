@@ -19,9 +19,9 @@ inputs:
     description: >
       IP addresses used for the nodes.
     default:
-      - 172.16.167.156
-      - 172.16.167.157
-      - 172.16.167.158
+      - 172.16.168.172
+      - 172.16.168.173
+      - 172.16.168.174
 
   nodes_count:
     description: >
