@@ -86,10 +86,7 @@ relationships:
 
             options_config:
               default:
-                skip_tags:
-                  # - localhost
-                  - check
-                  - bastion
+                skip_tags: []
                 ssh_common_args: { get_input: kubespray_ansible_ssh_common_args }
             ansible_env_vars:
               default: { get_input: ansible_env_vars }
