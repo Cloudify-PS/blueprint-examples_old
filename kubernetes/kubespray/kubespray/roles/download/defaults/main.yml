@@ -55,14 +55,14 @@ crun_version: 0.19
 kata_containers_version: 1.12.1
 
 # gcr and kubernetes image repo define
-gcr_image_repo: "gcr.io"
-kube_image_repo: "k8s.gcr.io"
+gcr_image_repo: "172.16.167.159:5000"
+kube_image_repo: "172.16.167.159:5000"
 
 # docker image repo define
-docker_image_repo: "docker.io"
+docker_image_repo: "172.16.167.159:5000"
 
 # quay image repo define
-quay_image_repo: "quay.io"
+quay_image_repo: "172.16.167.159:5000"
 
 # TODO(mattymo): Move calico versions to roles/network_plugins/calico/defaults
 # after migration to container download
@@ -96,14 +96,14 @@ crictl_supported_versions:
 crictl_version: "{{ crictl_supported_versions[kube_major_version] }}"
 
 # Download URLs
-kubelet_download_url: "https://storage.googleapis.com/kubernetes-release/release/{{ kube_version }}/bin/linux/{{ image_arch }}/kubelet"
-kubectl_download_url: "https://storage.googleapis.com/kubernetes-release/release/{{ kube_version }}/bin/linux/{{ image_arch }}/kubectl"
-kubeadm_download_url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubeadm_version }}/bin/linux/{{ image_arch }}/kubeadm"
-etcd_download_url: "https://github.com/coreos/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-{{ image_arch }}.tar.gz"
-cni_download_url: "https://github.com/containernetworking/plugins/releases/download/{{ cni_version }}/cni-plugins-linux-{{ image_arch }}-{{ cni_version }}.tgz"
-calicoctl_download_url: "https://github.com/projectcalico/calicoctl/releases/download/{{ calico_ctl_version }}/calicoctl-linux-{{ image_arch }}"
-calico_crds_download_url: "https://github.com/projectcalico/calico/archive/{{ calico_version }}.tar.gz"
-crictl_download_url: "https://github.com/kubernetes-sigs/cri-tools/releases/download/{{ crictl_version }}/crictl-{{ crictl_version }}-{{ ansible_system | lower }}-{{ image_arch }}.tar.gz"
+kubelet_download_url: "http://172.16.167.159:8002/kubernetes/{{ kube_version }}/kubelet"
+kubectl_download_url: "http://172.16.167.159:8002/kubernetes/{{ kube_version }}/kubectl"
+kubeadm_download_url: "http://172.16.167.159:8002/kubernetes/{{ kubeadm_version }}/kubeadm"
+etcd_download_url: "http://172.16.167.159:8002/kubernetes/etcd/etcd-{{ etcd_version }}-linux-{{ image_arch }}.tar.gz"
+cni_download_url: "http://172.16.167.159:8002/kubernetes/cni/cni-plugins-linux-{{ image_arch }}-{{ cni_version }}.tgz"
+calicoctl_download_url: "http://172.16.167.159:8002/kubernetes/calico/calicoctl-linux-{{ image_arch }}"
+calico_crds_download_url: "http://172.16.167.159:8002/kubernetes/calico/{{ calico_version }}.tar.gz"
+crictl_download_url: "http://172.16.167.159:8002/kubernetes/cri-tools/crictl-{{ crictl_version }}-{{ ansible_system | lower }}-{{ image_arch }}.tar.gz"
 helm_download_url: "https://get.helm.sh/helm-{{ helm_version }}-linux-{{ image_arch }}.tar.gz"
 crun_download_url: "https://github.com/containers/crun/releases/download/{{ crun_version }}/crun-{{ crun_version }}-linux-{{ image_arch }}"
 kata_containers_download_url: "https://github.com/kata-containers/runtime/releases/download/{{ kata_containers_version }}/kata-static-{{ kata_containers_version }}-{{ ansible_architecture }}.tar.xz"
