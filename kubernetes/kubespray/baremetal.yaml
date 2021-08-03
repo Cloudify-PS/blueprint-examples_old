@@ -4,6 +4,7 @@ imports:
   - https://cloudify.co/spec/cloudify/5.1.0/types.yaml
   - plugin:cloudify-ansible-plugin?version= >=2.10.0
   - plugin:cloudify-utilities-plugin?version= >=1.25.0
+  - plugin:cloudify-fabric-plugin
   - includes/application.yaml
   - includes/kube-config.yaml
 
@@ -14,6 +15,12 @@ inputs:
     description: >
       The ip address used for the master.
     default: { get_secret: k8s_master_ip }
+
+  cloudify_manager_ip:
+    description: >
+      The ip address of the Vm running Cloudify Manager.
+    type: string
+    default: { get_secret: cloudify_manager_ip }
 
   nodes_list:
     description: >
@@ -53,6 +60,21 @@ node_types:
   kube-master:
     derived_from: cloudify.nodes.Compute
     properties: *k8s-cluster-prop
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        configure:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/configure-registries.sh
+            fabric_env:
+              host: { get_input: master_ip }
+              user: centos
+              connect_kwargs:
+                pkey: { get_secret: agent_key_private }
+            process:
+              env:
+                CLOUDIFY_MANAGER_IP: { get_input: cloudify_manager_ip }
+
 
   kube-node:
     derived_from: cloudify.nodes.Compute
@@ -63,6 +85,18 @@ node_types:
         start:
           implementation: scripts/assign_ip.py
           executor: central_deployment_agent
+        configure:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/configure-registries.sh
+            fabric_env:
+              host: { get_attribute: [SELF, ip] }
+              user: centos
+              connect_kwargs:
+                pkey: { get_secret: agent_key_private }
+            process:
+              env:
+                CLOUDIFY_MANAGER_IP: { get_input: cloudify_manager_ip }
         delete: resources.cloudify_resources.tasks.delete_list_item
 
 node_templates:
