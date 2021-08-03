@@ -60,20 +60,20 @@ node_types:
   kube-master:
     derived_from: cloudify.nodes.Compute
     properties: *k8s-cluster-prop
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        configure:
-          implementation: fabric.fabric_plugin.tasks.run_script
-          inputs:
-            script_path: scripts/configure-registries.sh
-            fabric_env:
-              host: { get_input: master_ip }
-              user: centos
-              connect_kwargs:
-                pkey: { get_secret: agent_key_private }
-            process:
-              env:
-                CLOUDIFY_MANAGER_IP: { get_input: cloudify_manager_ip }
+#    interfaces:
+#      cloudify.interfaces.lifecycle:
+#        configure:
+#          implementation: fabric.fabric_plugin.tasks.run_script
+#          inputs:
+#            script_path: scripts/configure-registries.sh
+#            fabric_env:
+#              host: { get_input: master_ip }
+#              user: centos
+#              connect_kwargs:
+#                pkey: { get_secret: agent_key_private }
+#            process:
+#              env:
+#                CLOUDIFY_MANAGER_IP: { get_input: cloudify_manager_ip }
 
 
   kube-node:
@@ -85,18 +85,18 @@ node_types:
         start:
           implementation: scripts/assign_ip.py
           executor: central_deployment_agent
-        configure:
-          implementation: fabric.fabric_plugin.tasks.run_script
-          inputs:
-            script_path: scripts/configure-registries.sh
-            fabric_env:
-              host: { get_attribute: [SELF, ip] }
-              user: centos
-              connect_kwargs:
-                pkey: { get_secret: agent_key_private }
-            process:
-              env:
-                CLOUDIFY_MANAGER_IP: { get_input: cloudify_manager_ip }
+#        configure:
+#          implementation: fabric.fabric_plugin.tasks.run_script
+#          inputs:
+#            script_path: scripts/configure-registries.sh
+#            fabric_env:
+#              host: { get_attribute: [SELF, ip] }
+#              user: centos
+#              connect_kwargs:
+#                pkey: { get_secret: agent_key_private }
+#            process:
+#              env:
+#                CLOUDIFY_MANAGER_IP: { get_input: cloudify_manager_ip }
         delete: resources.cloudify_resources.tasks.delete_list_item
 
 node_templates:
