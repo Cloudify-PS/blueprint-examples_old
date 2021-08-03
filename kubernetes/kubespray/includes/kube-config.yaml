@@ -151,8 +151,5 @@ capabilities:
   endpoint:
     value: { concat: [ "https://", { get_attribute: [ kube-master, ip ] }, ":6443" ] }
 
-  node-endpoint:
-    value: { get_attribute: [ kube-node, ip ] }
-
   token:
     value: { get_attribute: [dashboard-token-and-port, bearer_token] }
