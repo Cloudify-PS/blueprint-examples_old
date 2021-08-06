@@ -26,7 +26,7 @@ sudo mkdir –p ~/ngagk
 sudo reposync -g -l -d -m --repoid=base --newest-only --download-metadata --download_path=/home/centos/ngagk/
 sudo createrepo ~/ngagk
 ```
-> Save `ngagk` repo to be uploaded to offline VM under `/ngagk`
+> Save `ngagk` repo to be uploaded to offline VM under `/ngagk` directory
 
 ```
 docker save registry:latest | gzip > registry.tar.gz
@@ -56,12 +56,68 @@ curl -L https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRICTRL
 curl -L https://github.com/projectcalico/calicoctl/releases/download/${CALICO_CTL_VERSION}/calicoctl-linux-${IMAGE_ARCH} -o kubernetes/calico/calicoctl-linux-${IMAGE_ARCH}
 curl -L https://github.com/projectcalico/calico/releases/download/${CALICO_VERSION}/release-${CALICO_VERSION}.tgz -o kubernetes/calico/${CALICO_VERSION}.tar.gz
 ```
-> Save `files_repo` directory to be uploaded to offline VM under `/files_repo`
+> Save `files_repo` directory to be uploaded to offline VM under `/files_repo` directory
 
+```
+mkdir ~/docker-ce
+sudo reposync -l -d -m --repoid=base --newest-only --download-metadata --download_path=/home/centos/docker-ce/
+sudo reposync -l -d -m --repoid=extras --newest-only --download-metadata --download_path=/home/centos/docker-ce/
+sudo reposync -l -d -m --repoid=docker-ce --newest-only --download-metadata --download_path=/home/centos/docker-ce/
+sudo createrepo ~/docker-ce
+```
+> Save `docker-ce` repo to be uploaded to offline VM under `/docker-ce` directory
+
+```
+# Minimum image
+sudo /usr/bin/docker pull quay.io/coreos/etcd:v3.4.13
+sudo docker image tag quay.io/coreos/etcd:v3.4.13 172.16.167.159:5000/coreos/etcd:v3.4.13
+sudo docker push 172.16.167.159:5000/coreos/etcd:v3.4.13
+sudo /usr/bin/docker pull quay.io/coreos/flannel:v0.13.0-amd64
+sudo docker image tag quay.io/coreos/flannel:v0.13.0-amd64 172.16.167.159:5000/coreos/flannel:v0.13.0-amd64
+sudo docker push 172.16.167.159:5000/coreos/flannel:v0.13.0-amd64
+sudo /usr/bin/docker pull k8s.gcr.io/pause:3.3
+sudo docker image tag k8s.gcr.io/pause:3.3 172.16.167.159:5000/pause:3.3
+sudo docker push 172.16.167.159:5000/pause:3.3
+sudo /usr/bin/docker pull k8s.gcr.io/coredns:1.7.0
+sudo docker image tag k8s.gcr.io/coredns:1.7.0 172.16.167.159:5000/coredns:1.7.0
+sudo docker push 172.16.167.159:5000/coredns:1.7.0
+sudo /usr/bin/docker pull k8s.gcr.io/dns/k8s-dns-node-cache:1.17.1
+sudo docker image tag k8s.gcr.io/dns/k8s-dns-node-cache:1.17.1 172.16.167.159:5000/dns/k8s-dns-node-cache:1.17.1
+sudo docker push 172.16.167.159:5000/dns/k8s-dns-node-cache:1.17.1
+sudo /usr/bin/docker pull k8s.gcr.io/cpa/cluster-proportional-autoscaler-amd64:1.8.3
+sudo docker image tag k8s.gcr.io/cpa/cluster-proportional-autoscaler-amd64:1.8.3 172.16.167.159:5000/cpa/cluster-proportional-autoscaler-amd64:1.8.3
+sudo docker push 172.16.167.159:5000/cpa/cluster-proportional-autoscaler-amd64:1.8.3
+sudo /usr/bin/docker pull k8s.gcr.io/kube-apiserver:v1.20.7
+sudo docker image tag k8s.gcr.io/kube-apiserver:v1.20.7 172.16.167.159:5000/kube-apiserver:v1.20.7
+sudo docker push 172.16.167.159:5000/kube-apiserver:v1.20.7
+sudo /usr/bin/docker pull docker.io/library/nginx:1.19
+sudo docker image tag docker.io/library/nginx:1.19 172.16.167.159:5000/library/nginx:1.19
+sudo docker push 172.16.167.159:5000/library/nginx:1.19
+sudo /usr/bin/docker pull docker.io/library/haproxy:2.3
+sudo docker image tag docker.io/library/haproxy:2.3 172.16.167.159:5000/library/haproxy:2.3
+sudo docker push 172.16.167.159:5000/library/haproxy:2.3
+sudo /usr/bin/docker pull k8s.gcr.io/kube-controller-manager:v1.20.7
+sudo docker image tag k8s.gcr.io/kube-controller-manager:v1.20.7 172.16.167.159:5000/kube-controller-manager:v1.20.7
+sudo docker push 172.16.167.159:5000/kube-controller-manager:v1.20.7
+sudo /usr/bin/docker pull k8s.gcr.io/kube-scheduler:v1.20.7
+sudo docker image tag k8s.gcr.io/kube-scheduler:v1.20.7 172.16.167.159:5000/kube-scheduler:v1.20.7
+sudo docker push 172.16.167.159:5000/kube-scheduler:v1.20.7
+sudo /usr/bin/docker pull k8s.gcr.io/kube-proxy:v1.20.7
+sudo docker image tag k8s.gcr.io/kube-proxy:v1.20.7 172.16.167.159:5000/kube-proxy:v1.20.7
+sudo docker push 172.16.167.159:5000/kube-proxy:v1.20.7
+```
+
+
+```
+curl "https://files.pythonhosted.org/packages/c3/3b/fe5bda7a3e927d9008c897cf1a0858a9ba9924a6b4750ec1824c9e617587/netaddr-0.8.0.tar.gz" --output netaddr-0.8.0.tar.gz
+curl "https://files.pythonhosted.org/packages/9d/a7/1b39a16cb90dfe491f57e1cab3103a15d4e8dd9a150872744f531b1106c1/ipaddr-2.2.0.tar.gz" --output ipaddr-2.2.0.tar.gz
+```
+> Save `netaddr-0.8.0.tar.gz` and `ipaddr-2.2.0.tar.gz` to be uploaded to offline VM under `/cm_plugins` directory
 
 ## Preparation on the Kubernetes VMs - MASTER and WORKERS
 
 ```
+#!!!! The node has to have a default route (needed by flannel)
 sudo systemctl stop firewalld
 sudo systemctl disable firewalld
 sudo sed -i 's/DEFROUTE="yes"/DEFROUTE="no"/g' /etc/sysconfig/network-scripts/ifcfg-ens192
@@ -85,10 +141,11 @@ EOF"
 ## Preparation on the offline VM - without connection to the internet
 
 
-TODO: ipaddr and netaddr install on venv
-TODO: docker-ce repo -> already mentioned below
-
-
+> Airgap config
+```
+sudo ip r add 172.16.0.0/16 via 172.16.167.1
+sudo ip r del default
+```
 
 > Upload to the offline VM all files, repos and directories specified in previous section
 
@@ -114,11 +171,22 @@ baseurl=http://127.0.0.1:8001
 enabled=1
 gpgcheck=0
 EOF"
+sudo sh -c "cat  << EOF >> /etc/yum.repos.d/docker-ce.repo
+[docker-ce]
+name=Docker-CE Repository
+baseurl=http://127.0.0.1:8003
+enabled=1
+keepcache=1
+gpgkey=https://download.docker.com/linux/centos/gp
+gpgcheck=0
+EOF"
 
 ssh-keygen -f ~/.ssh/ng_demo
 ssh-copy-id -i ~/.ssh/ng_demo.pub centos@<<ip_address>
 # `ssh-copy-id` command should be performed to the Master and Workers VMs (specify proper IP adresses) 
 ```
+
+
 
 > Upload plugins wagons and yaml files into the `/cm_plugins` directory
 > These should be: ansible plugin 2.12.0, docker plugin 2.0.3, fabric plugin 2.0.8, kubernetes plugin 2.13.0, utilities plugin 1.24.4
@@ -146,6 +214,17 @@ cd /docker-ce
 nohup python -m SimpleHTTPServer 8003 &
 ```
 
+> Install `netaddr` and `ipaddr` INSIDE Cloudify Manager's docker container:
+```
+cp /cloudify_plugins/ipaddr-2.2.0.tar.gz /opt/mgmtworker/env/bin/
+cp /cloudify_plugins/netaddr-0.8.0.tar.gz /opt/mgmtworker/env/bin/
+chmod 744 /opt/mgmtworker/env/bin/activate
+cd /opt/mgmtworker/env/bin
+./activate
+pip3 install ./ipaddr-2.2.0.tar.gz
+pip3 install ./netaddr-0.8.0.tar.gz
+```
+
 > Upload `tomcat-img.tar.gz` archive into the offline VM and run:
 ```
 sudo docker run -d -p 5000:5000 --restart=always --name registry registry:2
@@ -153,3 +232,5 @@ sudo docker image load -i tomcat-img.tar.gz
 sudo docker image tag bitnami/tomcat "0.0.0.0:5000/tomcat-serv"
 sudo docker push 0.0.0.0:5000/tomcat-serv
 ```
+
+> Note that majority of the configuration can be automated by a blueprint executed on Cloudify.
