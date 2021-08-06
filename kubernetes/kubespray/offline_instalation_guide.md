@@ -109,6 +109,14 @@ sudo docker push 172.16.167.159:5000/kube-proxy:v1.20.7
 
 
 ```
+curl "http://repository.cloudifysource.org/cloudify/wagons/cloudify-kubernetes-plugin/2.13.0/cloudify_kubernetes_plugin-2.13.0-centos-Core-py36-none-linux_x86_64.wgn" --output cloudify_kubernetes_plugin-2.13.0-centos-Core-py36-none-linux_x86_64.wgn
+curl "http://repository.cloudifysource.org/cloudify/wagons/cloudify-kubernetes-plugin/2.13.0/plugin.yaml" --output kubernetes-plugin.yaml
+curl "http://repository.cloudifysource.org/cloudify/wagons/cloudify-fabric-plugin/2.0.8/cloudify_fabric_plugin-2.0.8-centos-Core-py27.py36-none-linux_x86_64.wgn" --output cloudify_fabric_plugin-2.0.8-centos-Core-py27.py36-none-linux_x86_64.wgn
+curl "http://repository.cloudifysource.org/cloudify/wagons/cloudify-fabric-plugin/2.0.8/plugin.yaml" --output fabric-plugin.yaml
+curl "https://github.com/cloudify-cosmo/cloudify-ansible-plugin/releases/download/2.12.0/cloudify_ansible_plugin-2.12.0-centos-Core-py36-none-linux_x86_64.wgn" --output cloudify_ansible_plugin-2.12.0-centos-Core-py36-none-linux_x86_64.wgn
+curl "https://github.com/cloudify-cosmo/cloudify-ansible-plugin/releases/download/2.12.0/plugin.yaml" --output ansible-plugin.yaml
+curl "???????" --output cloudify_utilities_plugin-????-centos-Core-py36-none-linux_x86_64.wgn
+curl "???????" --output utilities-plugin.yaml
 curl "https://files.pythonhosted.org/packages/c3/3b/fe5bda7a3e927d9008c897cf1a0858a9ba9924a6b4750ec1824c9e617587/netaddr-0.8.0.tar.gz" --output netaddr-0.8.0.tar.gz
 curl "https://files.pythonhosted.org/packages/9d/a7/1b39a16cb90dfe491f57e1cab3103a15d4e8dd9a150872744f531b1106c1/ipaddr-2.2.0.tar.gz" --output ipaddr-2.2.0.tar.gz
 ```
